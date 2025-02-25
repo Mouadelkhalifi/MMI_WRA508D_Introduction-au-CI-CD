@@ -33,3 +33,16 @@ jobs:
       - name: Audit de sécurité
         run: composer audit --format=json --no-interaction
         continue-on-error: true # Permettre au CI de continuer même si des vulnérabilités sont détectées
+
+      - name: Dump environment variables for production
+        run: |
+          composer dump-env prod
+        env:
+          APP_ENV: prod
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: symfony-artifact
+          path: symfony-artifact-r1.tar.gz
